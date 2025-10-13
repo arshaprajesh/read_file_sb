@@ -9,6 +9,12 @@ pipeline {
         echo 'Repository cloned. Working from root directory.'
       }
     }
+    stage('Build JAR') {
+      steps {
+        sh './mvnw clean package -DskipTests'
+        echo 'JAR built successfully.'
+      }
+    }
 
     stage('Build') {
       steps {
