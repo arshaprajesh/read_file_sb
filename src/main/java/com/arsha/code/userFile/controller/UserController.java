@@ -1,21 +1,19 @@
-
-
 package com.arsha.code.userFile.controller;
+import com.arsha.code.userFile.dto.UserRequest;
+import com.arsha.code.userFile.userService.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 
 
-
-        import com.arsha.code.userFile.dto.UserRequest;
-        import com.arsha.code.userFile.userService.UserService;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.http.HttpStatus;
-        import org.springframework.http.ResponseEntity;
-        import org.springframework.web.bind.annotation.*;
-        import org.springframework.web.multipart.MultipartFile;
-
-        import java.io.IOException;
-        import java.util.List;
-        import java.util.Map;
 
 
 @CrossOrigin(origins = "http://localhost:5173")//because springboot and react running in different port
@@ -35,6 +33,13 @@ public class UserController {
         System.out.println("Received file: " + file.getOriginalFilename());
         System.out.println("User: " + userName + ", Date: " + userDate + ", State: " + userState);
         try {
+
+            String uploadDir = "/app/uploads"; // Make sure this folder exists in your Docker image
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            String fullPath = uploadDir + "/" + file.getOriginalFilename();
+            file.transferTo(new File(fullPath));
             UserRequest data = new UserRequest();
             data.setFilePath(file.getOriginalFilename()); // or save the file and set full path
             data.setUserName(userName);
