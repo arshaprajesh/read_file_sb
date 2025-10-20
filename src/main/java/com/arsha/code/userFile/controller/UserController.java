@@ -11,6 +11,7 @@ package com.arsha.code.userFile.controller;
         import org.springframework.http.HttpStatus;
         import org.springframework.http.ResponseEntity;
         import org.springframework.web.bind.annotation.*;
+        import org.springframework.web.multipart.MultipartFile;
 
         import java.io.IOException;
         import java.util.List;
@@ -26,11 +27,22 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/userFile")
-    public ResponseEntity<?> createUser(@RequestBody UserRequest data) {
+    public ResponseEntity<?> createUser(@RequestParam("file") MultipartFile file,
+                                        @RequestParam("userName") String userName,
+                                        @RequestParam("userDate") String userDate,
+                                        @RequestParam("userState") String userState) {
         System.out.println("post mapping starting");
+        System.out.println("Received file: " + file.getOriginalFilename());
+        System.out.println("User: " + userName + ", Date: " + userDate + ", State: " + userState);
         try {
+            UserRequest data = new UserRequest();
+            data.setFilePath(file.getOriginalFilename()); // or save the file and set full path
+            data.setUserName(userName);
+            data.setUserDate(userDate);
+            data.setUserState(userState);
+
             Map<String, Object> result = userService.createUser(data);
-            System.out.println("result"+result);
+            System.out.println("result: " + result);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "File not found"));
