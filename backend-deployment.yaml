@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: dev-playground
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: 303785347823.dkr.ecr.us-east-1.amazonaws.com/read-user-file-be:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: DB_HOST
+              value: db
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USER
+              value: youruser
+            - name: DB_PASSWORD
+              value: CK123indb#1
+            - name: DB_NAME
+              value: read_file
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://db:3306/read_file?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+            - name: SPRING_DATASOURCE_USERNAME
+              value: youruser
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: CK123indb#1
